@@ -10,32 +10,45 @@ namespace VotingTally\Includes;
 /**
  * Class Enqueue
  */
-class Ajax {
+class Rest {
 	/**
 	 * Class Constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_votingtally_record_vote', array( $this, 'ajax_record_vote' ) );
+		// Rest API.
+		add_action( 'rest_api_init', array( $this, 'register_rest_endpoints' ) );
+	}
+
+	/**
+	 * Register the REST endpoints this plugin needs.
+	 */
+	public function register_rest_endpoints() {
+		register_rest_route(
+			'votingtally/v1',
+			'/record_vote/',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'rest_record_vote' ),
+			)
+		);
 	}
 
 	/**
 	 * Capture the Recorded Vote.
+	 *
+	 * @param array $request Request array passed via Ajax.
 	 */
-	public function ajax_record_vote() {
+	public function rest_record_vote( $request ) {
 		global $current_user;
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( array() );
 		}
-		// Verify Nonce.
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'votingtallery-record-vote' ) ) {
-			wp_send_json_error( array() );
-		}
 
 		// Retrieve the vote.
-		$vote = absint( filter_input( INPUT_POST, 'vote' ) );
+		$vote = absint( $request['vote'] );
 
 		// Retrieve the post ID.
-		$post_id   = absint( filter_input( INPUT_POST, 'post_id' ) );
+		$post_id   = absint( $request['post_id'] );
 		$post_type = get_post_type( $post_id );
 
 		// Get the current site information.
@@ -111,7 +124,7 @@ class Ajax {
 
 		$sql = $wpdb->prepare( "UPDATE {$tablename} set rating = ( ( {$args['average_votes']} * {$args['average_rating']} ) + ( ( up_votes + down_votes ) * ( up_votes * 5 + down_votes * 1 ) / ( up_votes + down_votes ) ) ) / {$args['average_votes']} + up_votes + down_votes where site_id = %d and blog_id = %d and post_type = %s and content_id = %d", $site_id, $blog_id, $post_type, $post_id );
 		$wpdb->query( $sql );
-		wp_send_json_success( array() );
+		return array();
 	}
 
 	/**

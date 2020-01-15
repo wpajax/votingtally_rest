@@ -36,7 +36,7 @@ class Enqueue {
 			'votingtally',
 			'votingtally',
 			array(
-				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'rest_url'      => rest_url( 'votingtally/v1' ),
 				'loading'       => VOTINGTALLY_URL . 'images/loading.svg',
 				'vote_recorded' => __( 'Thanks! Your vote has been recorded.', 'votingtally' ),
 				'vote_error'    => __( 'There was a problem recording your vote.', 'votingtally' ),

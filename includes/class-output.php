@@ -33,10 +33,10 @@ class Output {
 		?>	
 		<div class="voting-tally">
 			<h5><?php esc_html_e( 'Rank This Post', 'votingtally' ); ?></h5>
-			<button class="vote-upwards tally-button" aria-label="<?php esc_attr_e( 'Vote this item up', 'votingtallery' ); ?>" data-nonce="<?php echo esc_html( wp_create_nonce( 'votingtallery-record-vote' ) ); ?>" data-id="<?php echo absint( get_the_ID() ); ?>" data-action="1">
+			<button class="vote-upwards tally-button" aria-label="<?php esc_attr_e( 'Vote this item up', 'votingtallery' ); ?>" data-nonce="<?php echo esc_html( wp_create_nonce( 'wp_rest' ) ); ?>" data-id="<?php echo absint( get_the_ID() ); ?>" data-action="1">
 				<img src="<?php echo esc_url( VOTINGTALLY_URL . 'images/thumbs-up.png' ); ?>" alt="Thumbs Up Button" />
 			</button>
-			<button class="vote-downwards  tally-button" aria-label="<?php esc_attr_e( 'Vote this item down', 'votingtallery' ); ?>" data-nonce="<?php echo esc_html( wp_create_nonce( 'votingtallery-record-vote' ) ); ?>" data-id="<?php echo absint( get_the_ID() ); ?>" data-action="0">
+			<button class="vote-downwards  tally-button" aria-label="<?php esc_attr_e( 'Vote this item down', 'votingtallery' ); ?>" data-nonce="<?php echo esc_html( wp_create_nonce( 'wp_rest' ) ); ?>" data-id="<?php echo absint( get_the_ID() ); ?>" data-action="0">
 				<img src="<?php echo esc_url( VOTINGTALLY_URL . 'images/thumbs-down.png' ); ?>" alt="Thumbs Down Button" />
 			</button>
 		</div>
