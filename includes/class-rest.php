@@ -31,6 +31,14 @@ class Rest {
 				'callback' => array( $this, 'rest_record_vote' ),
 			)
 		);
+		register_rest_route(
+			'votingtally/v1',
+			'/get_posts/',
+			array(
+				'methods'  => 'POST',
+				'callback' => array( $this, 'rest_get_posts' ),
+			)
+		);
 	}
 
 	/**
@@ -61,7 +69,7 @@ class Rest {
 		}
 
 		// Check if the user has already voted.
-		$user_table = Create_User_Table::get_tablename();
+		$user_table  = Create_User_Table::get_tablename();
 		$user_result = $wpdb->get_row(
 			$wpdb->prepare(
 				"select * from {$user_table} where user_id = %d AND post_id = %d",
@@ -153,7 +161,7 @@ class Rest {
 
 		$sql = $wpdb->prepare( "UPDATE {$tablename} set rating = ( ( {$args['average_votes']} * {$args['average_rating']} ) + ( ( up_votes + down_votes ) * ( up_votes * 5 + down_votes * 1 ) / ( up_votes + down_votes ) ) ) / {$args['average_votes']} + up_votes + down_votes where site_id = %d and blog_id = %d and post_type = %s and content_id = %d", $site_id, $blog_id, $post_type, $post_id );
 		$wpdb->query( $sql );
-		return array();
+		wp_send_json_success();
 	}
 
 	/**
@@ -178,5 +186,34 @@ class Rest {
 			return $results;
 		}
 		return false;
+	}
+
+	/**
+	 * Get the popular posts.
+	 *
+	 * @param array $request Request array passed via Ajax.
+	 */
+	public function rest_get_posts( $request ) {
+		global $wpdb;
+		$post_type      = sanitize_text_field( $request['post_type'] );
+		$posts_per_page = isset( $request['posts_per_page'] ) ? absint( $request['posts_per_page'] ) : 10;
+		$orderby        = isset( $request['order'] ) ? 'rating DESC' : sanitize_sql_orderby( 'rating ' . $request['order'] );
+		$tablename      = Create_Voting_Table::get_tablename();
+		$query          = "select * from {$tablename} WHERE post_type = %s order by {$orderby} LIMIT {$posts_per_page}";
+		$query          = $wpdb->prepare( $query, $post_type );
+		$results        = $wpdb->get_results( $query );
+
+		if ( $results ) {
+			foreach ( $results as &$result ) {
+				$result->permalink = get_permalink( $result->content_id );
+				$result->title     = get_the_title( $result->content_id );
+			}
+			wp_send_json_success( $results );
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( 'Could not find any posts to display', 'votingtally' ),
+			)
+		);
 	}
 }
