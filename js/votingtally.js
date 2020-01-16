@@ -20,13 +20,18 @@ jQuery(function($) {
 
 			}
 		} )
-		.done(function() {
-			$( '.voting-tally' ).html( '<h5>' + votingtally.vote_recorded + '</h5>' );
+		.done(function( response ) {
+			if ( true === response.success ) {
+				$( '.voting-tally' ).html( '<h5>' + votingtally.vote_recorded + '</h5>' );
+			} else {
+				$( '.voting-tally' ).html( '<h5>' + response.data.message + '</h5>' );
+			}
+			
 		})
-		.fail(function() {
+		.fail(function( response ) {
 			$( '.voting-tally' ).html( '<h5>' + votingtally.vote_error + '</h5>' );
 		})
-		.always(function() {
+		.always(function( data ) {
 			
 		});
 

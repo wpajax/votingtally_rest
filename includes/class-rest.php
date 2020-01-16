@@ -60,9 +60,26 @@ class Rest {
 			$blog_id = absint( $current_blog->blog_id );
 		}
 
+		// Check if the user has already voted.
+		$user_table = Create_User_Table::get_tablename();
+		$user_result = $wpdb->get_row(
+			$wpdb->prepare(
+				"select * from {$user_table} where user_id = %d AND post_id = %d",
+				$current_user->ID,
+				$post_id
+			)
+		);
+		if ( $user_result ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You have already voted!', 'votingtally' ),
+				)
+			);
+		}
+
 		// Get the post rating.
 		$post_rating = $this->get_post_stats( $post_id );
-		$tablename   = Create_Table::get_tablename();
+		$tablename   = Create_Voting_Table::get_tablename();
 		if ( ! $post_rating ) {
 			// Insert new row because it doesn't exist.
 			$wpdb->insert(
@@ -110,6 +127,18 @@ class Rest {
 			array( '%d', '%d', '%d' )
 		);
 
+		// Record the vote for the user.
+		$user_table = Create_User_Table::get_tablename();
+		$wpdb->insert(
+			$user_table,
+			array(
+				'user_id' => $current_user->ID,
+				'post_id' => $post_id,
+				'vote'    => $vote,
+			),
+			array( '%d', '%d', '%d' )
+		);
+
 		// Spiffy, now let's calculate the total ratings for everything and update.
 		$total_items = $wpdb->get_var( $wpdb->prepare( "select count( id ) from {$tablename} where site_id = %d and blog_id = %d and post_type = '%s'", $site_id, $blog_id, $post_type ) );
 
@@ -135,14 +164,14 @@ class Rest {
 	 * @return mixed false on failure, object on success.
 	 */
 	private function get_post_stats( $post_id = 0 ) {
-		global $current_user, $current_blog, $wpdb;
+		global $current_blog, $wpdb;
 		$site_id = 1;
 		$blog_id = 1;
 		if ( is_multisite() ) {
 			$site_id = $current_blog->site_id;
 			$blog_id = $current_blog->blog_id;
 		}
-		$tablename = Create_Table::get_tablename();
+		$tablename = Create_Voting_Table::get_tablename();
 		$sql       = "select * from {$tablename} where content_id = %d and site_id = %d and blog_id = %d";
 		$results   = $wpdb->get_row( $wpdb->prepare( $sql, $post_id, $site_id, $blog_id ) ); // phpcs:ignore
 		if ( $results ) {
