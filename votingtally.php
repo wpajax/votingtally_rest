@@ -20,6 +20,7 @@
 
 define( 'VOTINGTALLY_VERSION', '1.0.0' );
 define( 'VOTINGTALLY_TABLE_VERSION', '1.0.0' );
+define( 'VOTINGTALLY_USER_TABLE_VERSION', '1.0.0' );
 define( 'VOTINGTALLY_PLUGIN_NAME', 'Voting Tally' );
 define( 'VOTINGTALLY_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VOTINGTALLY_URL', plugins_url( '/', __FILE__ ) );
@@ -70,8 +71,11 @@ class Voting_Tally {
 	 * Fired when the plugins for WordPress have finished loading.
 	 */
 	public function plugins_loaded() {
-		// Create the table.
-		new VotingTally\Includes\Create_Table();
+		// Create the main table.
+		new VotingTally\Includes\Create_Voting_Table();
+
+		// Create the main table.
+		new VotingTally\Includes\Create_User_Table();
 
 		// Output the Voting Talley interface.
 		new VotingTally\Includes\Output();
