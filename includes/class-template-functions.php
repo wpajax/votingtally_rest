@@ -54,4 +54,41 @@ class Template_Functions {
 		}
 		return false;
 	}
+
+	/**
+	 * Retrieve Up-voted Posts for User.
+	 *
+	 * @param int $user_id The User ID to retrieve posts for.
+	 *
+	 * @return mixed Object on return, false on failure.
+	 */
+	public static function get_recent_votes_for_user( $user_id ) {
+		global $wpdb;
+		$user_id = absint( $user_id );
+
+		// Try to retrieve the cache. Cache by namespace (e.g., votingtally_posts_ASC_24).
+		$cache_key = sprintf(
+			'votingtally_user_%d',
+			$user_id
+		);
+		$cache     = wp_cache_get( $cache_key );
+		if ( $cache ) {
+			return $cache;
+		}
+
+		$tablename = Create_User_Table::get_tablename();
+		$query     = "select * from {$tablename} WHERE user_id = %d order by id DESC LIMIT 20";
+		$query     = $wpdb->prepare( $query, $user_id );
+		$results   = $wpdb->get_results( $query );
+
+		if ( $results ) {
+			foreach ( $results as &$result ) {
+				$result->permalink = get_permalink( $result->post_id );
+				$result->title     = get_the_title( $result->post_id );
+			}
+			wp_cache_set( $cache_key, $results, '', 600 ); // Cache for 10 minutes.
+			return $results;
+		}
+		return false;
+	}
 }
