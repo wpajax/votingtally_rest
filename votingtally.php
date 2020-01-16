@@ -85,6 +85,9 @@ class Voting_Tally {
 
 		// Register Rest Calls.
 		new VotingTally\Includes\Rest();
+
+		// Register Shortcode.
+		new VotingTally\Includes\Shortcode();
 	}
 }
 Voting_Tally::get_instance();
