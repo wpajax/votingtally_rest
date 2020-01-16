@@ -16,10 +16,11 @@ class Shortcode {
 	 */
 	public function __construct() {
 		add_shortcode( 'votingtally', array( $this, 'shortcode_votingtally' ) );
+		add_shortcode( 'votingtally_user', array( $this, 'shortcode_votingtally_user' ) );
 	}
 
 	/**
-	 * Output the Voting Tallery button interface.
+	 * Output the Voting Talley popular posts items.
 	 *
 	 * @param array $atts The shortcode attributes.
 	 *
@@ -27,7 +28,7 @@ class Shortcode {
 	 */
 	public function shortcode_votingtally( $atts ) {
 		if ( is_admin() ) {
-			return;
+			return '';
 		}
 		$atts        = shortcode_atts(
 			array(
@@ -68,6 +69,41 @@ class Shortcode {
 				);
 			}
 			echo '</ol>';
+			return ob_get_clean();
+		}
+		return '';
+	}
+
+	/**
+	 * Output the recent posts a user has voted for.
+	 *
+	 * @param array $atts The shortcode attributes.
+	 *
+	 * @return string Shortcode content.
+	 */
+	public function shortcode_votingtally_user( $atts ) {
+		if ( is_admin() || ! is_user_logged_in() ) {
+			return '';
+		}
+		global $current_user;
+		$user_id = $current_user->ID;
+		$posts   = Template_Functions::get_recent_votes_for_user( $user_id );
+		if ( $posts ) {
+			ob_start();
+			printf(
+				'<h2>%s</h2>',
+				esc_html__( 'Your Recent Votes', 'votingtally' )
+			);
+			echo '<ol>';
+			foreach ( $posts as $post_data ) {
+				printf(
+					'<li><a href="%s">%s</a></li>',
+					esc_url( $post_data->permalink ),
+					esc_html( $post_data->title )
+				);
+			}
+			echo '</ol>';
+			return ob_get_clean();
 		}
 		return '';
 	}
