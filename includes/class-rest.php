@@ -194,21 +194,13 @@ class Rest {
 	 * @param array $request Request array passed via Ajax.
 	 */
 	public function rest_get_posts( $request ) {
-		global $wpdb;
-		$post_type      = sanitize_text_field( $request['post_type'] );
-		$posts_per_page = isset( $request['posts_per_page'] ) ? absint( $request['posts_per_page'] ) : 10;
-		$orderby        = isset( $request['order'] ) ? 'rating DESC' : sanitize_sql_orderby( 'rating ' . $request['order'] );
-		$tablename      = Create_Voting_Table::get_tablename();
-		$query          = "select * from {$tablename} WHERE post_type = %s order by {$orderby} LIMIT {$posts_per_page}";
-		$query          = $wpdb->prepare( $query, $post_type );
-		$results        = $wpdb->get_results( $query );
-
-		if ( $results ) {
-			foreach ( $results as &$result ) {
-				$result->permalink = get_permalink( $result->content_id );
-				$result->title     = get_the_title( $result->content_id );
-			}
-			wp_send_json_success( $results );
+		$posts = Template_Functions::get_popular_posts(
+			$request['post_type'],
+			$request['posts_per_page'],
+			$request['order']
+		);
+		if ( $posts ) {
+			wp_send_json_success( $posts );
 		}
 		wp_send_json_error(
 			array(

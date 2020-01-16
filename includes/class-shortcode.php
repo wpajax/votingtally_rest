@@ -26,6 +26,9 @@ class Shortcode {
 	 * @return string Shortcode content.
 	 */
 	public function shortcode_votingtally( $atts ) {
+		if ( is_admin() ) {
+			return;
+		}
 		$atts        = shortcode_atts(
 			array(
 				'post_type'      => 'post',
