@@ -33,9 +33,9 @@ class Rest {
 		);
 		register_rest_route(
 			'votingtally/v1',
-			'/get_posts/',
+			'/get_posts/(?P<post_type>[a-zA-Z]+)/(?P<posts_per_page>\d+)/(?P<order>[A-Z]+)',
 			array(
-				'methods'  => 'POST',
+				'methods'  => 'GET',
 				'callback' => array( $this, 'rest_get_posts' ),
 			)
 		);

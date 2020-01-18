@@ -44,11 +44,14 @@ class Shortcode {
 			'posts_per_page' => $atts['posts_per_page'],
 			'order'          => $atts['order'],
 		);
-		$maybe_posts = wp_safe_remote_post(
-			esc_url( rest_url( 'votingtally/v1/get_posts/' ) ),
-			array(
-				'body' => $body,
-			)
+		$endpoint = sprintf(
+			'/votingtally/v1/get_posts/%s/%d/%s',
+			$atts['post_type'],
+			$atts['posts_per_page'],
+			$atts['order']
+		);
+		$maybe_posts = wp_safe_remote_get(
+			esc_url( rest_url( $endpoint ) )
 		);
 		if ( is_wp_error( $maybe_posts ) ) {
 			return '';
