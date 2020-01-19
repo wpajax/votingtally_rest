@@ -157,7 +157,7 @@ class Template_Functions {
 		if ( null === $result ) {
 			return 0;
 		}
-		wp_cache_set( $cache_key, $result );
+		wp_cache_set( $cache_key, $result, '', 600 ); // Cache for 10 minutes.
 		return absint( $result );
 	}
 }
