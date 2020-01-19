@@ -36,10 +36,8 @@ class Enqueue {
 			'votingtally',
 			'votingtally',
 			array(
-				'rest_url'      => rest_url( 'votingtally/v1' ),
-				'loading'       => VOTINGTALLY_URL . 'images/loading.svg',
-				'vote_recorded' => __( 'Thanks! Your vote has been recorded.', 'votingtally' ),
-				'vote_error'    => __( 'There was a problem recording your vote.', 'votingtally' ),
+				'rest_url' => rest_url( 'votingtally/v1' ),
+				'loading'  => VOTINGTALLY_URL . 'images/loading.svg',
 			)
 		);
 		wp_enqueue_style(

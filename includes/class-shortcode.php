@@ -44,7 +44,7 @@ class Shortcode {
 			'posts_per_page' => $atts['posts_per_page'],
 			'order'          => $atts['order'],
 		);
-		$endpoint = sprintf(
+		$endpoint    = sprintf(
 			'/votingtally/v1/get_posts/%s/%d/%s',
 			$atts['post_type'],
 			$atts['posts_per_page'],
