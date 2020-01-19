@@ -1,6 +1,6 @@
 <?php
 /**
- * Template functions for displaying Tally's.
+ * Helper functions for displaying Tally's.
  *
  * @package votingtally
  */
@@ -10,7 +10,7 @@ namespace VotingTally\Includes;
 /**
  * Class Enqueue
  */
-class Template_Functions {
+class Helper_Functions {
 
 	/**
 	 * Retrieve the most popular posts.

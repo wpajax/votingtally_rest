@@ -90,7 +90,7 @@ class Shortcode {
 		}
 		global $current_user;
 		$user_id = $current_user->ID;
-		$posts   = Template_Functions::get_recent_votes_for_user( $user_id );
+		$posts   = Helper_Functions::get_recent_votes_for_user( $user_id );
 		if ( $posts ) {
 			ob_start();
 			printf(

@@ -30,7 +30,7 @@ class Output {
 			return $content;
 		}
 		global $current_user;
-		$vote = Template_Functions::get_user_vote( get_queried_object_id(), $current_user->ID );
+		$vote = Helper_Functions::get_user_vote( get_queried_object_id(), $current_user->ID );
 		ob_start();
 		?>	
 		<div class="voting-tally">
@@ -43,7 +43,7 @@ class Output {
 			</button>
 			<div class=voting-tally-num-votes">
 				<?php
-				$num_votes = number_format( Template_Functions::get_post_positive_votes( get_queried_object_id() ) );
+				$num_votes = number_format( Helper_Functions::get_post_positive_votes( get_queried_object_id() ) );
 				/* Translators: %s is the number of post likes */
 				$message = sprintf( esc_html__( '%s Likes', 'votingtally' ), $num_votes );
 				echo esc_html( $message );

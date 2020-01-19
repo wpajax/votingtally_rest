@@ -203,7 +203,7 @@ class Rest {
 	 * @param array $request Request array passed via Ajax.
 	 */
 	public function rest_get_posts( $request ) {
-		$posts = Template_Functions::get_popular_posts(
+		$posts = Helper_Functions::get_popular_posts(
 			$request['post_type'],
 			$request['posts_per_page'],
 			$request['order']
