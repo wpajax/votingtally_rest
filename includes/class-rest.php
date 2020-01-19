@@ -49,7 +49,7 @@ class Rest {
 	public function rest_record_vote( $request ) {
 		global $current_user;
 		if ( ! is_user_logged_in() ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'user_not_logged_in',
 				__( 'User not logged in.', 'votingtally' ),
 				array( 'status' => 404 )
