@@ -100,9 +100,10 @@ class Shortcode {
 			echo '<ol>';
 			foreach ( $posts as $post_data ) {
 				printf(
-					'<li><a href="%s">%s</a></li>',
+					'<li><a href="%s">%s</a> (%d)</li>',
 					esc_url( $post_data->permalink ),
-					esc_html( $post_data->title )
+					esc_html( $post_data->title ),
+					absint( $post_data->vote )
 				);
 			}
 			echo '</ol>';
