@@ -21,15 +21,11 @@ jQuery(function($) {
 			}
 		} )
 		.done(function( response ) {
-			if ( true === response.success ) {
-				$( '.voting-tally' ).html( '<h5>' + votingtally.vote_recorded + '</h5>' );
-			} else {
-				$( '.voting-tally' ).html( '<h5>' + response.data.message + '</h5>' );
-			}
+			$( '.voting-tally' ).html( '<h5>' + response.message + '</h5>' );
 			
 		})
 		.fail(function( response ) {
-			$( '.voting-tally' ).html( '<h5>' + votingtally.vote_error + '</h5>' );
+			$( '.voting-tally' ).html( '<h5>' + response.responseJSON.message + '</h5>' );
 		})
 		.always(function( data ) {
 			

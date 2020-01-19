@@ -57,14 +57,14 @@ class Shortcode {
 			return '';
 		}
 		$remote_body = json_decode( wp_remote_retrieve_body( $maybe_posts ) );
-		if ( true === $remote_body->success && count( $remote_body->data ) > 0 ) {
+		if ( $remote_body ) {
 			ob_start();
 			printf(
 				'<h2>%s</h2>',
 				esc_html__( 'Popular Items', 'votingtally' )
 			);
 			echo '<ol>';
-			foreach ( $remote_body->data as $post_data ) {
+			foreach ( $remote_body as $post_data ) {
 				printf(
 					'<li><a href="%s">%s</a></li>',
 					esc_url( $post_data->permalink ),

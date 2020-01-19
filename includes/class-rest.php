@@ -49,7 +49,11 @@ class Rest {
 	public function rest_record_vote( $request ) {
 		global $current_user;
 		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( array() );
+			return new WP_Error(
+				'user_not_logged_in',
+				__( 'User not logged in.', 'votingtally' ),
+				array( 'status' => 404 )
+			);
 		}
 
 		// Retrieve the vote.
@@ -78,10 +82,10 @@ class Rest {
 			)
 		);
 		if ( $user_result ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You have already voted!', 'votingtally' ),
-				)
+			return new \WP_Error(
+				'user_voted',
+				__( 'You have already voted!', 'votingtally' ),
+				array( 'status' => 404 )
 			);
 		}
 
@@ -161,7 +165,12 @@ class Rest {
 
 		$sql = $wpdb->prepare( "UPDATE {$tablename} set rating = ( ( {$args['average_votes']} * {$args['average_rating']} ) + ( ( up_votes + down_votes ) * ( up_votes * 5 + down_votes * 1 ) / ( up_votes + down_votes ) ) ) / {$args['average_votes']} + up_votes + down_votes where site_id = %d and blog_id = %d and post_type = %s and content_id = %d", $site_id, $blog_id, $post_type, $post_id );
 		$wpdb->query( $sql );
-		wp_send_json_success();
+		return new \WP_REST_Response(
+			array(
+				'message' => __( 'Your vote has been recorded.', 'votingtally' ),
+			),
+			200
+		);
 	}
 
 	/**
@@ -200,12 +209,15 @@ class Rest {
 			$request['order']
 		);
 		if ( $posts ) {
-			wp_send_json_success( $posts );
+			return new \WP_REST_Response(
+				$posts,
+				200
+			);
 		}
-		wp_send_json_error(
-			array(
-				'message' => __( 'Could not find any posts to display', 'votingtally' ),
-			)
+		return new \WP_Error(
+			'no_posts',
+			__( 'There are not any popular posts to display.', 'votingtally' ),
+			array( 'status' => 404 )
 		);
 	}
 }
