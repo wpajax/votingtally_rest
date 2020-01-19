@@ -57,7 +57,7 @@ class Create_User_Table {
 				id INT(20) NOT NULL AUTO_INCREMENT,
 				user_id INT (20) NOT NULL,
 				post_id INT (20) NOT NULL,
-				vote INT(20) NOT NULL,
+				vote INT(2) NOT NULL,
 				PRIMARY KEY  (id)
 				) {$charset_collate};";
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';

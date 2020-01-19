@@ -91,4 +91,73 @@ class Template_Functions {
 		}
 		return false;
 	}
+
+	/**
+	 * Get a user vote for a post.
+	 *
+	 * @param int $post_id The Post ID.
+	 * @param int $user_id The User ID.
+	 *
+	 * @return int 1 if voted up, 0 if voted down, -1 if no result.
+	 */
+	public static function get_user_vote( $post_id, $user_id ) {
+		global $wpdb;
+		$post_id = absint( $post_id );
+		$user_id = absint( $user_id );
+
+		// Try to retrieve the cache. Cache by namespace (e.g., votingtally_posts_ASC_24).
+		$cache_key = sprintf(
+			'votingtally_post_%d_user_%d',
+			$post_id,
+			$user_id
+		);
+		$cache     = wp_cache_get( $cache_key );
+		if ( $cache ) {
+			return absint( $cache );
+		}
+
+		$tablename = Create_User_Table::get_tablename();
+		$query     = "select vote from {$tablename} WHERE user_id = %d and post_id = %d";
+		$query     = $wpdb->prepare( $query, $user_id, $post_id );
+		$result    = $wpdb->get_var( $query );
+
+		if ( null === $result ) {
+			return -1;
+		}
+		wp_cache_set( $cache_key, $result );
+		return absint( $result );
+	}
+
+	/**
+	 * Get positive post votes.
+	 *
+	 * @param int $post_id The Post ID.
+	 *
+	 * @return int amount of positive votes.
+	 */
+	public static function get_post_positive_votes( $post_id ) {
+		global $wpdb;
+		$post_id = absint( $post_id );
+
+		// Try to retrieve the cache. Cache by namespace (e.g., votingtally_posts_ASC_24).
+		$cache_key = sprintf(
+			'votingtally_post_%d_votes',
+			$post_id
+		);
+		$cache     = wp_cache_get( $cache_key );
+		if ( $cache ) {
+			return absint( $cache );
+		}
+
+		$tablename = Create_Voting_Table::get_tablename();
+		$query     = "select up_votes from {$tablename} WHERE content_id = %d";
+		$query     = $wpdb->prepare( $query, $post_id );
+		$result    = $wpdb->get_var( $query );
+
+		if ( null === $result ) {
+			return 0;
+		}
+		wp_cache_set( $cache_key, $result );
+		return absint( $result );
+	}
 }
