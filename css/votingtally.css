@@ -14,12 +14,12 @@
 	padding: 0 !important;
 	margin: 0 !important;
 }
-.voting-tally button img {
+.voting-tally button.tally-button img {
 	max-width: 50px;
 	margin: 0;
 	padding: 0;
 }
-.voting-tally button {
+.voting-tally button.tally-button {
 	display: inline-block;
 	border: none;
 	padding: 1rem 2rem;
@@ -37,19 +37,19 @@
 	-moz-appearance: none;
 }
 
-.voting-tally button:hover,
-.voting-tally button:focus,
-.voting-tally button.active {
+.voting-tally button.tally-button:hover,
+.voting-tally button.tally-button:focus,
+.voting-tally button.tally-button.active {
 	background: rgb(250, 250, 250);
 	border: 1px solid #EEE;
 }
 
-.voting-tally button:focus {
+.voting-tally button.tally-button:focus {
 	outline: 1px solid #fff;
 	outline-offset: -4px;
 }
 
-.voting-tally button:active,
-.voting-tally button.active {
+.voting-tally button.tally-button:active,
+.voting-tally button.tally-button.active {
 	transform: scale(0.99);
 }
