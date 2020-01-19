@@ -8,7 +8,7 @@
 namespace VotingTally\Includes;
 
 /**
- * Class Enqueue
+ * Class Helper_Functions
  */
 class Helper_Functions {
 

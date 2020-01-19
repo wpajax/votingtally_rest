@@ -8,7 +8,7 @@
 namespace VotingTally\Includes;
 
 /**
- * Class Enqueue
+ * Class Rest
  */
 class Rest {
 	/**

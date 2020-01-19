@@ -8,7 +8,7 @@
 namespace VotingTally\Includes;
 
 /**
- * Class Output
+ * Class Shortcode
  */
 class Shortcode {
 	/**

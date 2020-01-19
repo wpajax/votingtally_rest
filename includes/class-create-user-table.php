@@ -8,7 +8,7 @@
 namespace VotingTally\Includes;
 
 /**
- * Class Create_Table
+ * Class Create_User_Table
  */
 class Create_User_Table {
 
