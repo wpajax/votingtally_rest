@@ -45,7 +45,7 @@ class Enqueue {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param bool True to load the styles.
+		 * @param bool true to load the styles.
 		 */
 		$enqueue_styles = apply_filters( 'voting_tally_enqueue_styles', true );
 		if ( $enqueue_styles ) {

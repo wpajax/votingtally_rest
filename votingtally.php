@@ -74,7 +74,7 @@ class Voting_Tally {
 		// Create the main table.
 		new VotingTally\Includes\Create_Voting_Table();
 
-		// Create the main table.
+		// Create the user table.
 		new VotingTally\Includes\Create_User_Table();
 
 		// Output the Voting Talley interface.
